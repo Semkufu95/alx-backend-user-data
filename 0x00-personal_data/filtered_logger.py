@@ -83,4 +83,30 @@ def get_db() -> MySQLConnection:
         password=password,
         host=host,
         database=database
-        )
+    )
+
+
+def main() -> None:
+    '''
+    Main function to query user data and log it with sensitive fields redacted
+    '''
+    logger = get_logger()
+
+    with get_db() as db:
+        with db.cursor as cursor:
+            cursor.execute("SELECT * FROM users")
+
+            # Define columns to match the database layout
+            columns = ('name', 'email', 'phone', 'ssn', 'password')
+
+            # process and log each row
+            for row in cursor:
+                # create a log message with cursor from the database row
+                row_dict = dict(zip(columns, row))
+                message = "; ".join(f"{key}={value}" for key,
+                                    value in row_dict.items()) + ";"
+                logger.info(message)
+
+                
+if __name__ == '__main__':
+    main()
