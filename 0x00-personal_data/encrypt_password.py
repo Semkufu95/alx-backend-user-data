@@ -8,7 +8,7 @@ which is a byte string
 import bcrypt
 
 
-def hash_password(password):
+def hash_password(password: str) -> bytes:
     '''
     Function to hash and salt a password
     '''
@@ -19,6 +19,19 @@ def hash_password(password):
     salt = bcrypt.gensalt()
 
     # hash the password
-    hash = bcrypt.hashpw(bytes, salt)
+    hashed_password = bcrypt.hashpw(bytes, salt)
 
-    return hash
+    return hashed_password
+
+
+def is_valid(hashed_password: bytes, password: str) -> bool:
+    '''
+    Function to validate password
+    '''
+    # Converting password into an array
+    user_password = password.encode('utf-8')
+
+    # check if password matches
+    result = bcrypt.checkpw(user_password, hashed_password)
+
+    return result
