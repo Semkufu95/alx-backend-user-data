@@ -94,7 +94,7 @@ def main() -> None:
     db = get_db()
 
     try:
-        db.cursor = cursor
+        cursor = db.cursor()
         cursor.execute("SELECT * FROM users")
         # Define columns to match the database layout
         columns = ('name', 'email', 'phone', 'ssn', 'password')
